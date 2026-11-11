@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gemini 4 Argon</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>" />
+</head>
+<body>
+  <div class="glow glow-a"></div>
+  <div class="glow glow-b"></div>
+
+  <!-- ======================= SIDEBAR ======================= -->
+  <aside class="sidebar" id="sidebar">
+    <div class="side-top">
+      <button class="icon-btn" id="menuBtn" title="Toggle menu">☰</button>
+      <button class="new-chat-btn" id="newChatBtn"><span class="plus">＋</span> New chat</button>
+      <div class="search-wrap">
+        <input id="historySearch" type="text" placeholder="Search chats…" />
+      </div>
+    </div>
+    <nav class="history" id="historyList"></nav>
+    <div class="side-foot">
+      <a class="foot-link" href="https://github.com/gefrus112/gemini-4-argon" target="_blank" rel="noreferrer">
+        <span class="gh-dot"></span> gefrus112/gemini-4-argon
+      </a>
+      <div class="foot-meta" id="repoMeta">GitHub · loading…</div>
+    </div>
+  </aside>
+
+  <!-- ======================= MAIN ======================= -->
+  <main class="main">
+    <header class="topbar">
+      <div class="model-picker" id="modelPicker" tabindex="0">
+        <span class="mp-name" id="mpName">Gemini 4 Argon</span>
+        <span class="mp-badge" id="mpBadge">Advanced</span>
+        <span class="mp-caret">▾</span>
+        <div class="mp-menu" id="mpMenu"></div>
+      </div>
+      <div class="top-actions">
+        <button class="ghost-btn" id="modelsBtn">Models</button>
+        <button class="ghost-btn" id="sandboxBtn">Sandbox</button>
+        <button class="ghost-btn" id="previewBtn">Preview</button>
+      </div>
+    </header>
+
+    <!-- empty state -->
+    <section class="hero" id="hero">
+      <div class="hero-logo">
+        <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="spark" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#7aa2ff"/><stop offset=".5" stop-color="#b98cff"/><stop offset="1" stop-color="#ff8ac2"/>
+            </linearGradient>
+          </defs>
+          <path fill="url(#spark)" d="M32 2c2 16 12 26 28 30-16 4-26 14-28 30-2-16-12-26-28-30C20 28 30 18 32 2z"/>
+        </svg>
+        <h1 class="hero-title"><span class="grad">Hello, Lisa</span></h1>
+        <p class="hero-sub">How can I help you today?</p>
+      </div>
+      <div class="cards">
+        <button class="card" data-prompt="Generate a futuristic image of a neon city">
+          <span class="card-label">Generate a futuristic image</span>
+          <span class="card-thumb thumb-img"></span>
+        </button>
+        <button class="card" data-prompt="Help me write HTML, CSS, and JS for a landing page">
+          <span class="card-label">Help me write HTML, CSS, and JS</span>
+          <span class="card-thumb thumb-code"></span>
+        </button>
+        <button class="card" data-prompt="Create a CSS spinner from an idea">
+          <span class="card-label">Create a CSS spinner from an idea</span>
+          <span class="card-thumb thumb-spin"></span>
+        </button>
+        <button class="card" data-prompt="Make a three.js 3D crystal scene">
+          <span class="card-label">Make a three.js 3D scene</span>
+          <span class="card-thumb thumb-3d"></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- conversation -->
+    <section class="thread" id="thread" hidden></section>
+
+    <!-- composer -->
+    <footer class="composer-wrap">
+      <div class="composer">
+        <textarea id="input" rows="1" placeholder="Ask Gemini 4 Argon…  (Shift+Enter for newline)"></textarea>
+        <div class="composer-bar">
+          <div class="composer-tools">
+            <select id="quickLang" title="Language for generated code">
+              <option value="">Auto-detect language</option>
+            </select>
+            <span class="ctx-meter" id="ctxMeter" title="Conversation context">0 / 1,000,000 tokens</span>
+          </div>
+          <button class="send-btn" id="sendBtn" title="Send">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 12h14M12 5l7 7-7 7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+      <p class="disclaimer">Gemini 4 Argon runs locally in a Linux sandbox · code executes with a 10s timeout · output capped at 20 visible lines</p>
+    </footer>
+  </main>
+
+  <!-- ======================= RIGHT DOCK ======================= -->
+  <aside class="dock" id="dock">
+    <div class="dock-tabs">
+      <button class="dock-tab active" data-tab="preview">Preview</button>
+      <button class="dock-tab" data-tab="files">Files</button>
+      <button class="dock-tab" data-tab="run">Run</button>
+      <button class="dock-tab" data-tab="langs">Languages</button>
+      <button class="dock-close" id="dockClose">✕</button>
+    </div>
+
+    <div class="dock-pane active" id="pane-preview">
+      <div class="pane-bar">
+        <span id="previewTitle">No preview yet</span>
+        <a id="previewOpen" class="mini-btn" target="_blank" hidden>Open ↗</a>
+      </div>
+      <iframe id="previewFrame" class="preview-frame" sandbox="allow-scripts allow-same-origin" title="File preview"></iframe>
+      <div class="preview-empty" id="previewEmpty">
+        <p>HTML, SVG and three.js artifacts render here.</p>
+        <p class="dim">Try the <b>three.js 3D scene</b> suggestion card.</p>
+      </div>
+    </div>
+
+    <div class="dock-pane" id="pane-files">
+      <div class="pane-bar"><span>Workspace artifacts</span><button class="mini-btn" id="refreshFiles">↻</button></div>
+      <ul class="file-list" id="fileList"></ul>
+    </div>
+
+    <div class="dock-pane" id="pane-run">
+      <div class="pane-bar">
+        <span>Linux code sandbox</span>
+        <select id="runLang"></select>
+      </div>
+      <textarea id="runCode" class="run-editor" spellcheck="false" placeholder="// paste or write code, then press Run"></textarea>
+      <div class="run-actions">
+        <button class="run-btn" id="runBtn">▶ Run</button>
+        <span class="run-meta" id="runMeta">node · python · gcc · g++ · perl</span>
+      </div>
+      <pre class="run-output" id="runOutput">output appears here (20 lines shown)</pre>
+    </div>
+
+    <div class="dock-pane" id="pane-langs">
+      <div class="pane-bar"><span>Toolchains in this sandbox</span></div>
+      <ul class="lang-list" id="langList"></ul>
+    </div>
+  </aside>
+
+  <!-- ======================= MODELS MODAL ======================= -->
+  <div class="modal" id="modelsModal" hidden>
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2>Model lineup</h2>
+        <button class="icon-btn" id="modelsClose">✕</button>
+      </div>
+      <p class="modal-sub">Real, working models served by the local Argon engine — all online, all with 1M-token context.</p>
+      <div class="model-grid" id="modelGrid"></div>
+    </div>
+  </div>
+
+  <script src="/config.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+node_modules/
+workspace/
+public/config.js
+.env
+*.log
