@@ -641,6 +641,9 @@
     loadModels().catch(console.warn);
     renderHistory();
 
+    // never show the model lineup unless explicitly opened
+    $('#modelsModal').hidden = true;
+
     // history server merge (server copy fills gaps on new devices)
     fetch('/api/history').then((r) => r.json()).then((serverChats) => {
       if (!Array.isArray(serverChats) || !serverChats.length) return;

@@ -26,6 +26,8 @@ html, body {
 }
 button { font: inherit; cursor: pointer; }
 ::selection { background: rgba(122, 162, 255, 0.35); }
+/* the hidden attribute must always win — modals/hero only show on demand */
+[hidden] { display: none !important; }
 
 /* ambient glows */
 .glow { position: fixed; border-radius: 50%; filter: blur(120px); opacity: .16; pointer-events: none; z-index: 0; }
@@ -117,7 +119,8 @@ body.dock-open .main { margin-right: var(--dock-w); }
   padding: 8px; display: none; z-index: 60;
   box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
 }
-.model-picker.open .mp-menu { display: block; }
+.model-picker.open .mp-menu,
+.model-chip.open .composer-menu { display: block; }
 .mp-item {
   display: flex; flex-direction: column; gap: 3px;
   padding: 10px 12px; border-radius: 12px; cursor: pointer;
