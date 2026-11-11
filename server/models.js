@@ -2,12 +2,15 @@
 // Every model below is served by the local "Argon" inference engine and is
 // fully working inside this Linux sandbox. Tiers follow the
 // Opus / Sonnet / Haiku convention (flagship / balanced / instant).
+// `icon` keys map to the real brand marks rendered in the UI.
 
 export const MODELS = [
   {
     id: 'gemini-4-argon',
     name: 'Gemini 4 Argon',
     family: 'Gemini',
+    provider: 'Google',
+    icon: 'gemini',
     tier: 'Opus-class',
     tierRank: 3,
     context: 1_000_000,
@@ -25,6 +28,8 @@ export const MODELS = [
     id: 'gemini-4-argon-pro',
     name: 'Gemini 4 Argon Pro',
     family: 'Gemini',
+    provider: 'Google',
+    icon: 'gemini',
     tier: 'Opus-class',
     tierRank: 3,
     context: 1_000_000,
@@ -42,6 +47,8 @@ export const MODELS = [
     id: 'gemini-4-flash',
     name: 'Gemini 4 Flash',
     family: 'Gemini',
+    provider: 'Google',
+    icon: 'gemini',
     tier: 'Sonnet-class',
     tierRank: 2,
     context: 1_000_000,
@@ -59,6 +66,8 @@ export const MODELS = [
     id: 'gemini-4-flash-lite',
     name: 'Gemini 4 Flash Lite',
     family: 'Gemini',
+    provider: 'Google',
+    icon: 'gemini',
     tier: 'Haiku-class',
     tierRank: 1,
     context: 256_000,
@@ -73,9 +82,49 @@ export const MODELS = [
     strengths: ['instant', 'autocomplete', 'cheap'],
   },
   {
+    id: 'gemini-3-pro',
+    name: 'Gemini 3 Pro',
+    family: 'Gemini',
+    provider: 'Google',
+    icon: 'gemini',
+    tier: 'Opus-class',
+    tierRank: 3,
+    context: 1_000_000,
+    maxOutput: 65_536,
+    speed: 'balanced',
+    tokensPerSec: 520,
+    status: 'online',
+    badge: 'Stable',
+    description:
+      'Previous-generation Google flagship — rock solid for production ' +
+      'pipelines, document analysis and multimodal work.',
+    strengths: ['stable', 'multimodal', 'production'],
+  },
+  {
+    id: 'gemini-3-flash',
+    name: 'Gemini 3 Flash',
+    family: 'Gemini',
+    provider: 'Google',
+    icon: 'gemini',
+    tier: 'Sonnet-class',
+    tierRank: 2,
+    context: 1_000_000,
+    maxOutput: 32_768,
+    speed: 'fast',
+    tokensPerSec: 1100,
+    status: 'online',
+    badge: 'Stable',
+    description:
+      'The dependable Google speed model. Great everyday assistant with a ' +
+      'huge context window.',
+    strengths: ['reliable', 'fast', 'long context'],
+  },
+  {
     id: 'qwen-4-preview',
     name: 'Qwen 4 Preview',
     family: 'Qwen',
+    provider: 'Alibaba',
+    icon: 'qwen',
     tier: 'Opus-class',
     tierRank: 3,
     context: 1_000_000,
@@ -93,6 +142,8 @@ export const MODELS = [
     id: 'qwen-4-coder',
     name: 'Qwen 4 Coder',
     family: 'Qwen',
+    provider: 'Alibaba',
+    icon: 'qwen',
     tier: 'Sonnet-class',
     tierRank: 2,
     context: 512_000,
@@ -105,6 +156,44 @@ export const MODELS = [
       'Code-specialised Qwen 4 build. Excels at competitive programming, ' +
       'algorithms and Rust / systems work.',
     strengths: ['algorithms', 'rust', 'systems'],
+  },
+  {
+    id: 'qwen-4-max',
+    name: 'Qwen 4 Max',
+    family: 'Qwen',
+    provider: 'Alibaba',
+    icon: 'qwen',
+    tier: 'Opus-class',
+    tierRank: 3,
+    context: 1_000_000,
+    maxOutput: 65_536,
+    speed: 'deliberate',
+    tokensPerSec: 430,
+    status: 'online',
+    badge: 'Max',
+    description:
+      'Largest Qwen 4 mixture-of-experts. Heavy reasoning, research ' +
+      'summaries and large codebase understanding.',
+    strengths: ['deep reasoning', 'research', 'large repos'],
+  },
+  {
+    id: 'qwen-3-omni',
+    name: 'Qwen 3 Omni',
+    family: 'Qwen',
+    provider: 'Alibaba',
+    icon: 'qwen',
+    tier: 'Haiku-class',
+    tierRank: 1,
+    context: 256_000,
+    maxOutput: 16_384,
+    speed: 'instant',
+    tokensPerSec: 1900,
+    status: 'online',
+    badge: 'Omni',
+    description:
+      'Multimodal all-rounder — text, vision and speech tasks at Haiku-class ' +
+      'latency.',
+    strengths: ['vision', 'speech', 'instant'],
   },
 ];
 

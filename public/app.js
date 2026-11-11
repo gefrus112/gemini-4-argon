@@ -19,6 +19,38 @@
   const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
   const fmtNum = (n) => n.toLocaleString('en-US');
 
+  /* =================== brand icons (real marks, inline SVG) =================== */
+  const ICONS = {
+    // Google Gemini — four-point sparkle, Google gradient
+    gemini: `<svg viewBox="0 0 64 64" aria-hidden="true">
+      <defs><linearGradient id="gemGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#4E8CFF"/><stop offset=".5" stop-color="#9B72FF"/><stop offset="1" stop-color="#D965C8"/>
+      </linearGradient></defs>
+      <path fill="url(#gemGrad)" d="M32 2c2 16 12 26 28 30-16 4-26 14-28 30-2-16-12-26-28-30C20 28 30 18 32 2z"/>
+    </svg>`,
+    // Google — the four-colour G
+    google: `<svg viewBox="0 0 48 48" aria-hidden="true">
+      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+    </svg>`,
+    // Qwen (Alibaba) — gradient Q mark in the Qwen purple-blue palette
+    qwen: `<svg viewBox="0 0 64 64" aria-hidden="true">
+      <defs><linearGradient id="qwenGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#615CED"/><stop offset="1" stop-color="#3BA7FF"/>
+      </linearGradient></defs>
+      <circle cx="31" cy="29" r="17.5" fill="none" stroke="url(#qwenGrad)" stroke-width="9"/>
+      <rect x="34" y="41" width="21" height="9" rx="4.5" fill="url(#qwenGrad)" transform="rotate(45 34 41)"/>
+    </svg>`,
+    // fallback sparkle
+    spark: `<svg viewBox="0 0 64 64" aria-hidden="true">
+      <path fill="#7aa2ff" d="M32 2c2 16 12 26 28 30-16 4-26 14-28 30-2-16-12-26-28-30C20 28 30 18 32 2z"/>
+    </svg>`,
+  };
+  const iconFor = (m) => ICONS[m?.icon] || ICONS.spark;
+  const providerMark = (m) => (m?.provider === 'Google' ? ICONS.google : m?.provider === 'Alibaba' ? ICONS.qwen : ICONS.spark);
+
   /* =================== persistence (localStorage + Supabase) =================== */
   const LS_KEY = 'argon-chats-v1';
 
@@ -194,20 +226,30 @@
     const m = state.model;
     $('#mpName').textContent = m.name;
     $('#mpBadge').textContent = m.badge;
-    $('#mpMenu').innerHTML = state.models.map((x) => `
+    $('#mpIcon').innerHTML = iconFor(m);
+    $('#cmName').textContent = m.name;
+    $('#cmTier').textContent = m.tier;
+    $('#cmIcon').innerHTML = iconFor(m);
+
+    const menuHtml = state.models.map((x) => `
       <div class="mp-item ${x.id === m.id ? 'selected' : ''}" data-id="${x.id}">
         <div class="row1">
-          <span class="status-dot ${x.status === 'preview' ? 'preview' : ''}"></span>
+          <span class="m-icon">${iconFor(x)}</span>
           <b>${esc(x.name)}</b>
           <span class="tier">${esc(x.tier)}</span>
         </div>
-        <div class="desc">${esc(x.description.slice(0, 84))}… · ${fmtNum(x.context)} tok</div>
+        <div class="desc">${esc(x.provider || x.family)} · ${fmtNum(x.context)} tok · ${esc((x.description || '').slice(0, 60))}…</div>
       </div>`).join('');
-    $$('#mpMenu .mp-item').forEach((el) => el.addEventListener('click', () => {
+    $('#mpMenu').innerHTML = menuHtml;
+    $('#composerMenu').innerHTML = menuHtml;
+
+    $$('#mpMenu .mp-item, #composerMenu .mp-item').forEach((el) => el.addEventListener('click', (e) => {
+      e.stopPropagation();
       state.model = state.models.find((x) => x.id === el.dataset.id);
       localStorage.setItem('argon-model', state.model.id);
       renderModelPicker(); renderModelGrid();
       $('#modelPicker').classList.remove('open');
+      $('#composerModel').classList.remove('open');
     }));
   }
 
@@ -215,10 +257,11 @@
     $('#modelGrid').innerHTML = state.models.map((x) => `
       <div class="model-card ${x.id === state.model?.id ? 'selected' : ''}">
         <div class="mc-head">
-          <span class="status-dot ${x.status === 'preview' ? 'preview' : ''}"></span>
+          <span class="m-icon lg">${iconFor(x)}</span>
           <span class="mc-name">${esc(x.name)}</span>
           <span class="mc-tier">${esc(x.tier)}</span>
         </div>
+        <div class="mc-provider"><span class="m-icon sm">${providerMark(x)}</span> ${esc(x.provider || x.family)} · ${esc(x.family)} family</div>
         <div class="mc-desc">${esc(x.description)}</div>
         <div class="mc-stats">
           <span class="mc-stat">${fmtNum(x.context)} context</span>
@@ -295,6 +338,13 @@
     const chat = state.chats.find((c) => c.id === id);
     if (!chat) return;
     state.currentId = id;
+    // restore the model this chat was using — with its icon
+    const chatModel = state.models.find((x) => x.id === chat.model);
+    if (chatModel) {
+      state.model = chatModel;
+      localStorage.setItem('argon-model', chatModel.id);
+      renderModelPicker();
+    }
     $('#hero').hidden = true;
     $('#thread').hidden = false;
     renderThread(chat);
@@ -331,22 +381,22 @@
     const t = $('#thread');
     t.innerHTML = '';
     for (const m of chat.messages) {
-      appendMsg(m.role, m.content, { final: true });
+      appendMsg(m.role, m.content, { final: true, modelId: m.modelId || chat.model });
     }
     t.scrollTop = t.scrollHeight;
   }
 
-  function appendMsg(role, content, { final = false, model } = {}) {
+  function appendMsg(role, content, { final = false, model, modelId } = {}) {
     const t = $('#thread');
     const div = document.createElement('div');
     div.className = `msg ${role === 'user' ? 'user' : 'bot'}`;
     if (role === 'user') {
       div.innerHTML = `<div class="bubble">${esc(content)}</div>`;
     } else {
-      const m = model || state.model;
+      const m = model || state.models.find((x) => x.id === modelId) || state.model;
       div.innerHTML = `
         <div class="head">
-          <div class="avatar">✦</div>
+          <div class="avatar model-av">${iconFor(m)}</div>
           <span class="who">${esc(m.name)}</span>
           <span class="tier-chip">${esc(m.tier)} · ${fmtNum(m.context)} tok ctx</span>
         </div>
@@ -433,7 +483,8 @@
             refreshFiles();
             if (evt.preview) showPreview(`/artifacts/${evt.name}`, evt.name);
           } else if (evt.t === 'done') {
-            chat.messages.push({ role: 'bot', content: acc, ts: new Date().toISOString() });
+            chat.messages.push({ role: 'bot', content: acc, ts: new Date().toISOString(), modelId: evt.model || state.model.id });
+            chat.model = evt.model || chat.model || state.model.id;
             saveLocal();
             supaSaveChat(chat);
             fetch('/api/history', {
@@ -629,10 +680,12 @@
     $('#menuBtn').addEventListener('click', () => $('#sidebar').classList.toggle('collapsed'));
     $('#historySearch').addEventListener('input', (e) => renderHistory(e.target.value));
 
-    // model picker
+    // model pickers (topbar + composer)
     $('#modelPicker').addEventListener('click', () => $('#modelPicker').classList.toggle('open'));
+    $('#composerModel').addEventListener('click', () => $('#composerModel').classList.toggle('open'));
     document.addEventListener('click', (e) => {
       if (!e.target.closest('#modelPicker')) $('#modelPicker').classList.remove('open');
+      if (!e.target.closest('#composerModel')) $('#composerModel').classList.remove('open');
     });
 
     // modals

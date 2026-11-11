@@ -104,6 +104,7 @@ body.dock-open .main { margin-right: var(--dock-w); }
 }
 .model-picker:hover { border-color: rgba(122, 162, 255, 0.4); }
 .mp-name { font-weight: 600; font-size: 16px; }
+.model-picker .m-icon { width: 20px; height: 20px; }
 .mp-badge {
   font-size: 11px; padding: 3px 9px; border-radius: 999px;
   background: var(--grad); color: #0b0b12; font-weight: 700;
@@ -128,6 +129,33 @@ body.dock-open .main { margin-right: var(--dock-w); }
 .mp-item .desc { font-size: 11.5px; color: var(--dim); }
 .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
 .status-dot.preview { background: var(--purple); box-shadow: 0 0 8px var(--purple); }
+
+/* brand icons */
+.m-icon { width: 18px; height: 18px; display: inline-flex; flex: 0 0 auto; }
+.m-icon svg { width: 100%; height: 100%; display: block; }
+.m-icon.sm { width: 13px; height: 13px; }
+.m-icon.lg { width: 24px; height: 24px; }
+.mc-provider { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--dim); }
+.msg.bot .avatar.model-av { background: rgba(122, 162, 255, 0.12); border: 1px solid var(--border); padding: 4px; }
+.msg.bot .avatar.model-av svg { width: 100%; height: 100%; }
+
+/* composer model chip (model selection next to the chat input) */
+.model-chip {
+  position: relative; display: flex; align-items: center; gap: 8px;
+  padding: 6px 12px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--border); background: rgba(122, 162, 255, 0.08);
+  font-size: 12.5px; user-select: none;
+}
+.model-chip:hover, .model-chip.open { border-color: rgba(122, 162, 255, 0.5); background: rgba(122, 162, 255, 0.14); }
+.model-chip .cm-name { font-weight: 600; }
+.model-chip .cm-tier {
+  font-size: 9.5px; font-weight: 800; letter-spacing: .04em;
+  padding: 2px 8px; border-radius: 999px; background: var(--grad); color: #0b0b12;
+}
+.composer-menu {
+  top: auto; bottom: calc(100% + 10px); left: 0;
+  max-height: 420px; overflow-y: auto;
+}
 
 .top-actions { display: flex; gap: 8px; }
 .ghost-btn {

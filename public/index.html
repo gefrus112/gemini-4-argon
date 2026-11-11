@@ -33,6 +33,7 @@
   <main class="main">
     <header class="topbar">
       <div class="model-picker" id="modelPicker" tabindex="0">
+        <span class="m-icon" id="mpIcon"></span>
         <span class="mp-name" id="mpName">Gemini 4 Argon</span>
         <span class="mp-badge" id="mpBadge">Advanced</span>
         <span class="mp-caret">▾</span>
@@ -88,6 +89,13 @@
         <textarea id="input" rows="1" placeholder="Ask Gemini 4 Argon…  (Shift+Enter for newline)"></textarea>
         <div class="composer-bar">
           <div class="composer-tools">
+            <div class="model-chip" id="composerModel" tabindex="0" title="Choose model">
+              <span class="m-icon" id="cmIcon"></span>
+              <span class="cm-name" id="cmName">Gemini 4 Argon</span>
+              <span class="cm-tier" id="cmTier">Opus-class</span>
+              <span class="mp-caret">▾</span>
+              <div class="mp-menu composer-menu" id="composerMenu"></div>
+            </div>
             <select id="quickLang" title="Language for generated code">
               <option value="">Auto-detect language</option>
             </select>

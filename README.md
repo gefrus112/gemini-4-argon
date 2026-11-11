@@ -8,10 +8,15 @@ GitHub. Model tiers follow the **Claude Opus / Sonnet / Haiku** convention.
 
 ## Features
 
-- **Model lineup (all working, all shown live)** — `Gemini 4 Argon` (Opus-class),
-  `Gemini 4 Argon Pro`, `Gemini 4 Flash` (Sonnet-class), `Gemini 4 Flash Lite`
-  (Haiku-class), `Qwen 4 Preview` and `Qwen 4 Coder` — every one with a
-  **1,000,000-token context window**, streaming responses and live status.
+- **Model lineup (all working, all shown live)** — 10 models with their **real
+  brand icons** (Google G + Gemini sparkle, Alibaba Qwen mark):
+  `Gemini 4 Argon` / `Argon Pro` / `Flash` / `Flash Lite`, `Gemini 3 Pro` /
+  `3 Flash` (Google) and `Qwen 4 Preview` / `Qwen 4 Coder` / `Qwen 4 Max` /
+  `Qwen 3 Omni` (Alibaba) — Opus / Sonnet / Haiku tiers, every one with a
+  **1,000,000-token context window**, streaming and live status.
+- **Model selection right at the chat input** — the composer carries a model
+  chip with icon, tier and dropdown; switching chats restores each
+  conversation's model (and its icon) automatically.
 - **Chat history** — searchable sidebar grouped by date. Saved locally, mirrored
   to the server, and synced to **Supabase** (`gemini_chats` / `gemini_messages`)
   when `public/config.js` is configured.
